@@ -2,6 +2,7 @@ package chat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,11 +29,11 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        boolean checking = accountService.checkingUser(login, password);
+        Cookie ck[]=request.getCookies();
+        String login = ck[0].getValue();
+        String password = ck[1].getValue();
 
-        System.out.print(checking);
+        boolean checking = accountService.checkingUser(login, password);
 
         if (checking) {
 

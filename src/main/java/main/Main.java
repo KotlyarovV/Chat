@@ -19,9 +19,6 @@ public class Main {
 
         AccountService accountService = new AccountService();
 
-        accountService.addNewUser(new UserProfile("admin"));
-        accountService.addNewUser(new UserProfile("test"));
-
         AllRequestsServlet allRequestsServlet = new AllRequestsServlet();
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 

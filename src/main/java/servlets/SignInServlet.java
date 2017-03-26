@@ -2,12 +2,15 @@ package servlets;
 
 import accounts.AccountService;
 import accounts.UserProfile;
+import templater.PageGenerator;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 
 public class SignInServlet extends HttpServlet {
     AccountService accountService;
@@ -30,12 +33,17 @@ public class SignInServlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-        boolean checking = accountService.checkingUser(login, password);
-        response.setContentType("text/html;charset=utf-8");
+        URL url = new URL(request.getHeader("referer"));
 
-        String answer = checking ? "Authorized: " + login : "Unauthorized";
-        int status = checking ? 200 : 401;
-        response.getWriter().println(answer);
-        response.setStatus(status);
+        boolean checking = accountService.checkingUser(login, password);
+
+        if (checking) {
+            response.addCookie(new Cookie("login", login));
+            response.addCookie(new Cookie("password", password));
+        }
+
+        response.setContentType("text/html;charset=utf-8");
+        response.sendRedirect(url.getPath());
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }

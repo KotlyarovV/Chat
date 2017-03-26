@@ -1,20 +1,53 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta charset="UTF-8"/>
     <title>Chat</title>
 </head>
 <body>
-<p>Sign in</p>
-<form action="/chat" method="GET">
-  <p> Login: <input type="text" name="login"/> </p>
-    <p>   Password: <input type="text" name="password"/> <input type="submit" value="Ok"> </p>
-</form>
 
 
-<br>
-<form action="/signup">
-    <button type = "submit"> button for registration</button>
-</form>
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length >= 2) return parts.pop().split(";").shift();
+    }
+
+    function delete_cookie ( cookie_name )
+    {
+        var cookie_date = new Date ( );  // Текущая дата и время
+        cookie_date.setTime ( cookie_date.getTime() - 1 );
+        document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
+    }
+
+    function anuuthorization ()
+    {
+        delete_cookie("login");
+        delete_cookie("password");
+        window.location.href='/'
+    }
+
+    if (document.cookie == "")
+    {
+        document.write(`
+        <p>Sign in</p><form action="/signin" method="POST">
+        <p> Login: <input type="text" name="login"/> </p>
+        <p>   Password: <input type="text" name="password"/> <input type="submit" value="Ok"> </p>
+        </form><br><form action="/signup"><button type = "submit"> button for registration</button></form>
+        `);
+    }
+
+    else {
+        document.write(`
+            <h1>Hello,  `+ getCookie('login') + `!</h1>
+            <button onclick="window.location.href='/chat'">Go to chat</button><br><br>
+            <button onclick="anuuthorization()">Exit</button>
+        `);
+
+    }
+
+</script>
+
 </body>
 </html>

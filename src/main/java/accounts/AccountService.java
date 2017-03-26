@@ -3,20 +3,20 @@ package accounts;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class AccountService {
 
     private final Map<String, UserProfile> loginToProfile;
     private final Map<String, UserProfile> sessionIdToProfile;
+    private final Set<String> hashes;
     private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public AccountService() {
         loginToProfile = new HashMap<>();
         sessionIdToProfile = new HashMap<>();
+        hashes = new HashSet<>();
         loadUsers();
     }
 
@@ -25,8 +25,10 @@ public class AccountService {
             Session session = sessionFactory.openSession();
             List<UserProfile> users = (List<UserProfile>)session.createQuery("from accounts.UserProfile").list();
 
-            for (UserProfile userProfile : users)
+            for (UserProfile userProfile : users) {
                 loginToProfile.put(userProfile.getLogin(), userProfile);
+                System.out.println(userProfile.getLogin()+" " +userProfile.getPassword());
+            }
 
             session.close();
         } finally {}
