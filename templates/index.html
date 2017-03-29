@@ -39,7 +39,11 @@
             var message = "${login}" + ":" + messageField.value;
             ws.send(message);
             messageField.value = '';
+
         }
+
+
+
     </script>
 </head>
 <body onload="init();">
@@ -59,10 +63,13 @@
         <textarea id="messages" rows="20" cols="50" readonly="readonly"></textarea>
     </div>
 
-    <form name="message" action="">
+    <form name="message" action="" onsubmit="sendMessage();return false;">
         <input name="usermsg" type="text" id="message" size="40"/>
         <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
     </form>
+
+
+    </form><button onclick="window.location.href='/'">To main page</button></form>
 </div>
 </body>
 </html>
