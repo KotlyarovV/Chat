@@ -3,9 +3,27 @@
     <meta charset="UTF-8"/>
     <title>Chat</title>
     <script type="text/javascript">
+
+        function getParameterByName(name) {
+
+            url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+
         var ws;
         function init() {
-            ws = new WebSocket("ws://95.82.220.91:8080/chat");
+            if (getParameterByName("link") != null || getParameterByName("link") == "") {
+                ws = new WebSocket("ws://95.82.220.91:8080/chat?link="+ getParameterByName("link"));
+            } else {
+                ws = new WebSocket("ws://95.82.220.91:8080/chat");
+            }
+
             ws.onopen = function (event) {
             }
             ws.onmessage = function (event) {

@@ -11,7 +11,9 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import templater.PageGenerator;
 import java.io.IOException;
+import java.net.HttpCookie;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "ChatServlet", urlPatterns = {"/chat"})
@@ -29,7 +31,7 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-        Cookie ck[]=request.getCookies();
+        Cookie[] ck=request.getCookies();
         String login = ck[0].getValue();
         String password = ck[1].getValue();
 
@@ -54,6 +56,16 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(LOGOUT_TIME);
-        factory.setCreator((req, resp) -> new ChatWebSocket(chatService));
+        factory.setCreator((request, response) ->
+        {
+            List<HttpCookie> ck = request.getCookies();
+            String login = ck.get(0).getValue();
+            String link = null;
+
+            if (request.getParameterMap().containsKey("link"))
+                link = request.getParameterMap().get("link").get(0);
+
+            return new ChatWebSocket(chatService, login, link);
+        });
     }
 }

@@ -11,10 +11,14 @@ public class ChatService {
         this.webSockets = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
-    public void sendMessage(String data) {
+    public void sendMessage(String data, ChatWebSocket chatWebSocket) {
+
         for (ChatWebSocket user : webSockets) {
             try {
-                user.sendString(data);
+                if (chatWebSocket.link == null && user.link == null)
+                    user.sendString(data);
+                else if (user.link != null && user.link.equals(chatWebSocket.link))
+                    user.sendString(data);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

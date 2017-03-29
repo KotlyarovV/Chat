@@ -25,7 +25,7 @@
     {
         delete_cookie("login");
         delete_cookie("password");
-        window.location.href='/'
+       window.location.href='/'
     }
 
     if (document.cookie == "")
@@ -42,7 +42,15 @@
         document.write(`
             <h1>Hello,  `+ getCookie('login') + `!</h1>
             <button onclick="window.location.href='/chat'">Go to chat</button><br><br>
-            <button onclick="anuuthorization()">Exit</button>
+
+
+
+            <p>Key word chat</p><form action="/chat" method="GET">
+            <p> Keyword <input type="text" name="link"/> </p>
+            <input type="submit" value="Ok"> </p>
+            <br>
+            </form><button onclick="anuuthorization()">Exit</button></form>
+
         `);
 
     }

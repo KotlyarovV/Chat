@@ -11,9 +11,13 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 public class ChatWebSocket {
     private ChatService chatService;
     private Session session;
+    public String name;
+    public String link;
 
-    public ChatWebSocket(ChatService chatService) {
+    public ChatWebSocket(ChatService chatService, String name, String link) {
         this.chatService = chatService;
+        this.name = name;
+        this.link = link;
     }
 
     @OnWebSocketConnect
@@ -24,7 +28,7 @@ public class ChatWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        chatService.sendMessage(data);
+        chatService.sendMessage(data, this);
     }
 
     @OnWebSocketClose
