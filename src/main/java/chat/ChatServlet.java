@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import accounts.AccountService;
+import accounts.UserProfile;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import templater.PageGenerator;
@@ -24,7 +25,7 @@ public class ChatServlet extends WebSocketServlet {
     private AccountService accountService;
 
     public ChatServlet(AccountService accountService) {
-        this.chatService = new ChatService();
+        this.chatService = new ChatService(accountService);
         this.accountService = accountService;
     }
 
@@ -60,12 +61,13 @@ public class ChatServlet extends WebSocketServlet {
         {
             List<HttpCookie> ck = request.getCookies();
             String login = ck.get(0).getValue();
+            UserProfile userProfile = accountService.getUser(login);
             String link = null;
 
             if (request.getParameterMap().containsKey("link"))
                 link = request.getParameterMap().get("link").get(0);
 
-            return new ChatWebSocket(chatService, login, link);
+            return new ChatWebSocket(chatService, userProfile, link);
         });
     }
 }

@@ -1,5 +1,6 @@
 package chat;
 
+import accounts.UserProfile;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -11,28 +12,31 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 public class ChatWebSocket {
     private ChatService chatService;
     private Session session;
-    public String name;
+    public UserProfile userProfile;
     public String link;
 
-    public ChatWebSocket(ChatService chatService, String name, String link) {
+    public ChatWebSocket(ChatService chatService, UserProfile userProfile, String link) {
         this.chatService = chatService;
-        this.name = name;
+        this.userProfile = userProfile;
         this.link = link;
     }
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
+        userProfile.online = true;
         chatService.add(this);
         this.session = session;
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        chatService.sendMessage(data, this);
+        Message message = new Message(userProfile, data);
+        chatService.sendMessage(message, this);
     }
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
+        userProfile.online = false;
         chatService.remove(this);
     }
 

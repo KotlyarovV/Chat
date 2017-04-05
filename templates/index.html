@@ -19,13 +19,13 @@
         var ws;
         function init() {
             if (getParameterByName("link") != null || getParameterByName("link") == "") {
-                ws = new WebSocket("ws://95.82.220.91:8080/chat?link="+ getParameterByName("link"));
+                ws = new WebSocket("ws://localhost:8080/chat?link="+ getParameterByName("link"));
             } else {
-                ws = new WebSocket("ws://95.82.220.91:8080/chat");
+                ws = new WebSocket("ws://localhost:8080/chat");
             }
-
             ws.onopen = function (event) {
             }
+
             ws.onmessage = function (event) {
                 var $textarea = document.getElementById("messages");
                 $textarea.value = $textarea.value + event.data + "\n";
@@ -36,7 +36,8 @@
         function sendMessage() {
             var messageField = document.getElementById("message");
 
-            var message = "${login}" + ":" + messageField.value;
+            //var message = "${login}" + ":" + messageField.value;
+            var message = messageField.value;
             ws.send(message);
             messageField.value = '';
 

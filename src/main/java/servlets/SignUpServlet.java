@@ -34,6 +34,14 @@ public class SignUpServlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+
+        if (accountService.checkRegistration(login)) {
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().println("You have been already registered!");
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         accountService.addNewUser(new UserProfile(login,password));
 
         response.setContentType("text/html;charset=utf-8");
@@ -41,7 +49,6 @@ public class SignUpServlet extends HttpServlet {
         response.addCookie(new Cookie("password", password));
 
         response.getWriter().println(PageGenerator.instance().getPage("go_to_chat.html", null));
-
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

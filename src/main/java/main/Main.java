@@ -27,15 +27,7 @@ public class Main {
         context.addServlet(new ServletHolder(new chat.ChatServlet(accountService)), "/chat");
         context.addServlet(new ServletHolder(allRequestsServlet), "/*");
 
-        //ResourceHandler resource_handler = new ResourceHandler();
-        //resource_handler.setDirectoriesListed(true);
-        //resource_handler.setResourceBase("public_html");
-
-        //HandlerList handlers = new HandlerList();
-        //handlers.setHandlers(new Handler[]{resource_handler, context});
-
         Server server = new Server(8080);
-        //server.setHandler(handlers);
         server.setHandler(context);
 
         server.start();

@@ -13,5 +13,6 @@
         <property name="connection.pool_size">1</property>
 
         <mapping class="accounts.UserProfile"></mapping>
+        <mapping class="chat.Message"></mapping>
     </session-factory>
 </hibernate-configuration>

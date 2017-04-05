@@ -1,0 +1,17 @@
+create table users (id int(11) NOT NULL AUTO_INCREMENT, login varchar (150) NOT NULL, password varchar(150) NOT NULL, PRIMARY KEY (id) ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    from_id INT,
+    to_id INT,
+    value TEXT(30000),
+    FOREIGN KEY (from_id) REFERENCES users(id),
+    FOREIGN KEY (to_id) REFERENCES users(id)
+);
+
+
+select * from messages;
+
+delete from messages;
+
