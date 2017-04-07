@@ -12,7 +12,7 @@ public class AccountService {
     private final Map<String, UserProfile> loginToProfile;
     private final Map<Integer, UserProfile> idToProfile;
     private final Set<String> hashes;
-    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    public SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public AccountService() {
         loginToProfile = new HashMap<>();
@@ -66,7 +66,6 @@ public class AccountService {
         loginToProfile.put(userProfile.getLogin(), userProfile);
     }
 
-
     public void addMessage (Message message) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -85,5 +84,4 @@ public class AccountService {
     public UserProfile getUserById(int sessionId) {
         return idToProfile.get(sessionId);
     }
-
 }

@@ -29,11 +29,11 @@ public class UserProfile {
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="from_id")
-    private List<Message> sendedMessages;
+    public List<Message> sendedMessages;
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="to_id")
-    private List<Message> gettedMessages;
+    public List<Message> gettedMessages;
 
     public UserProfile(String login, String pass) {
         this.login = login;

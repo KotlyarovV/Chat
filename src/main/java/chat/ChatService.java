@@ -1,6 +1,7 @@
 package chat;
 
 import accounts.AccountService;
+import accounts.UserProfile;
 
 import java.util.Collections;
 import java.util.Set;
@@ -18,23 +19,28 @@ public class ChatService {
 
     public void sendMessage(Message message, ChatWebSocket chatWebSocket) {
 
+        boolean send = false;
         int i = 0;
-
         for (ChatWebSocket user : webSockets) {
             i++;
             try {
-                if (chatWebSocket.link == null && user.link == null) {
+
+                if ((chatWebSocket.link == null && user.link == null && chatWebSocket.toUserProfile == null) ||
+                        (user.link != null && user.link.equals(chatWebSocket.link)) ||
+                        (chatWebSocket.toUserProfile.getLogin().equals(user.userProfile.getLogin()))) {
                     user.sendString(message.from.login + " : " + message.value);
-                    accountService.addMessage(message);
+                    send = true;
                 }
-                else if (user.link != null && user.link.equals(chatWebSocket.link))
-                    user.sendString(message.from.login +" : "+ message.value);
-                    accountService.addMessage(message);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+            if (i == webSockets.size() && send == false) {
+                accountService.addMessage(message);
+                System.out.println ("writed");
+            }
         }
+
     }
 
     public void add(ChatWebSocket webSocket) {

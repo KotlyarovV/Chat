@@ -13,12 +13,15 @@ public class ChatWebSocket {
     private ChatService chatService;
     private Session session;
     public UserProfile userProfile;
+    public UserProfile toUserProfile;
     public String link;
 
-    public ChatWebSocket(ChatService chatService, UserProfile userProfile, String link) {
+    public ChatWebSocket(ChatService chatService, UserProfile userProfile,
+                         String link, UserProfile toUserProfile) {
         this.chatService = chatService;
         this.userProfile = userProfile;
         this.link = link;
+        this.toUserProfile = toUserProfile;
     }
 
     @OnWebSocketConnect
@@ -26,11 +29,16 @@ public class ChatWebSocket {
         userProfile.online = true;
         chatService.add(this);
         this.session = session;
+        for (Message message : userProfile.gettedMessages) {
+            sendString(message.from.login + " : " + message.value);
+        }
     }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        Message message = new Message(userProfile, data);
+        Message message;
+        if (toUserProfile == null) message = new Message(userProfile, data);
+        else message = new Message(userProfile, toUserProfile, data);
         chatService.sendMessage(message, this);
     }
 
@@ -48,4 +56,3 @@ public class ChatWebSocket {
         }
     }
 }
-

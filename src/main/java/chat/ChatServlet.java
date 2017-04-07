@@ -38,20 +38,16 @@ public class ChatServlet extends WebSocketServlet {
 
         boolean checking = accountService.checkingUser(login, password);
 
+        resp.setContentType("text/html;charset=utf-8");
+        resp.setStatus(HttpServletResponse.SC_OK);
+
         if (checking) {
 
             Map<String, Object> pageVariables = new HashMap<String, Object>();
             pageVariables.put("login", login);
-
             resp.getWriter().println(PageGenerator.instance().getPage("index.html", pageVariables));
-            resp.setContentType("text/html;charset=utf-8");
-            resp.setStatus(HttpServletResponse.SC_OK);
         }
-        else {
-            resp.getWriter().println("You are not registered!!!");
-            resp.setContentType("text/html;charset=utf-8");
-            resp.setStatus(HttpServletResponse.SC_OK);
-        }
+        else resp.getWriter().println("You are not registered!!!");
     }
 
     @Override
@@ -62,12 +58,14 @@ public class ChatServlet extends WebSocketServlet {
             List<HttpCookie> ck = request.getCookies();
             String login = ck.get(0).getValue();
             UserProfile userProfile = accountService.getUser(login);
-            String link = null;
+            Map <String, List<String>> parameterMap = request.getParameterMap();
 
-            if (request.getParameterMap().containsKey("link"))
-                link = request.getParameterMap().get("link").get(0);
+            String link = parameterMap.containsKey("link") ? parameterMap.get("link").get(0) : null;
+            String name = parameterMap.containsKey("name") ? parameterMap.get("name").get(0) : null;
 
-            return new ChatWebSocket(chatService, userProfile, link);
+            UserProfile toUserProfile1 = (name == null) ? null : accountService.getUser(name);
+
+            return new ChatWebSocket(chatService,  userProfile, link, toUserProfile1);
         });
     }
 }

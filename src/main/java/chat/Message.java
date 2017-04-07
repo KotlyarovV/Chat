@@ -1,7 +1,6 @@
 package chat;
 
 import accounts.UserProfile;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
