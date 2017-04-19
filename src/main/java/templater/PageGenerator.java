@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class PageGenerator {
@@ -26,8 +27,9 @@ public class PageGenerator {
     public String getPage(String filename, Map<String, Object> data) {
         Writer stream = new StringWriter();
         try {
-            Template template = cfg.getTemplate(HTML_DIR + File.separator + filename);
+            Template template = cfg.getTemplate(HTML_DIR + File.separator + filename, "UTF-8");
             template.process(data, stream);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -25,6 +25,7 @@ public class Main {
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), "/signup");
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), "/signin");
         context.addServlet(new ServletHolder(new chat.ChatServlet(accountService)), "/chat");
+        context.addServlet(new ServletHolder(new FileServlet()), "/file");
         context.addServlet(new ServletHolder(allRequestsServlet), "/*");
 
         Server server = new Server(8080);

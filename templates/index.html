@@ -19,11 +19,11 @@
         var ws;
         function init() {
             if (getParameterByName("link") != null || getParameterByName("link") == "") {
-                ws = new WebSocket("ws://95.82.220.91:8080/chat?link="+ getParameterByName("link"));
+                ws = new WebSocket("ws://localhost:8080/chat?link="+ getParameterByName("link"));
             } else if (getParameterByName("name") != null || getParameterByName("name") == "") {
-                ws = new WebSocket("ws://95.82.220.91:8080/chat?name="+ getParameterByName("name"));
+                ws = new WebSocket("ws://localhost:8080/chat?name="+ getParameterByName("name"));
             } else {
-                 ws = new WebSocket("ws://95.82.220.91:8080/chat");
+                 ws = new WebSocket("ws://localhost:8080/chat");
             }
             ws.onopen = function (event) {
             }

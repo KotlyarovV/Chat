@@ -7,6 +7,8 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+import java.util.Iterator;
+
 @SuppressWarnings("UnusedDeclaration")
 @WebSocket
 public class ChatWebSocket {
@@ -29,8 +31,14 @@ public class ChatWebSocket {
         userProfile.online = true;
         chatService.add(this);
         this.session = session;
-        for (Message message : userProfile.gettedMessages) {
+
+        Iterator<Message> iterator = userProfile.gettedMessages.iterator();
+
+        while (iterator.hasNext()) {
+            Message message = iterator.next();
             sendString(message.from.login + " : " + message.value);
+            chatService.deleteMessage(message);
+            iterator.remove();
         }
     }
 

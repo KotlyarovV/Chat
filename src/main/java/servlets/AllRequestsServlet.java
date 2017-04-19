@@ -14,8 +14,9 @@ public class AllRequestsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        response.getWriter().println(PageGenerator.instance().getPage("page.html", null));
         response.setContentType("text/html;charset=utf-8");
+
+        response.getWriter().println(PageGenerator.instance().getPage("page.html", null));
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

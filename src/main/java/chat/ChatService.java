@@ -43,6 +43,10 @@ public class ChatService {
 
     }
 
+    public void deleteMessage (Message message) {
+        accountService.deleteMessage(message);
+    }
+
     public void add(ChatWebSocket webSocket) {
         webSockets.add(webSocket);
     }

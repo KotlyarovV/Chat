@@ -77,6 +77,14 @@ public class AccountService {
             getUserById(message.toId).getGettedMessagesMessages().add(message);
     }
 
+    public void deleteMessage (Message message) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(message);
+        session.getTransaction().commit();
+        session.close();
+    }
+
     public UserProfile getUserByLogin(String login) {
         return loginToProfile.get(login);
     }

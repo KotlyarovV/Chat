@@ -54,4 +54,10 @@ public class Message {
         this.toId = to.id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Message)) return false;
+        Message message = (Message) o;
+        return message.id == this.id;
+    }
 }
