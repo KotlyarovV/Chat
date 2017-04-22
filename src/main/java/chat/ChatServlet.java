@@ -33,8 +33,14 @@ public class ChatServlet extends WebSocketServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
         Cookie[] ck=request.getCookies();
-        String login = ck[0].getValue();
-        String password = ck[1].getValue();
+
+        String login = "";
+        String password = "";
+
+        for (Cookie cookie : ck) {
+            if (cookie.getName().equals("login")) login = cookie.getValue();
+            if (cookie.getName().equals("password")) password = cookie.getValue();
+        }
 
         boolean checking = accountService.checkingUser(login, password);
 
@@ -56,7 +62,12 @@ public class ChatServlet extends WebSocketServlet {
         factory.setCreator((request, response) ->
         {
             List<HttpCookie> ck = request.getCookies();
-            String login = ck.get(0).getValue();
+            String login = "";
+
+            for (HttpCookie cookie : ck)
+                if (cookie.getName().equals("login")) login = cookie.getValue();
+
+
             UserProfile userProfile = accountService.getUser(login);
             Map <String, List<String>> parameterMap = request.getParameterMap();
 

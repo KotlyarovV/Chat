@@ -41,6 +41,8 @@ public class SignInServlet extends HttpServlet {
             response.addCookie(new Cookie("password", password));
         }
 
+
+
         response.setContentType("text/html;charset=utf-8");
         response.sendRedirect(url.getPath());
         response.setStatus(HttpServletResponse.SC_OK);

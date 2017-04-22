@@ -38,7 +38,6 @@
         function sendMessage() {
             var messageField = document.getElementById("message");
 
-            //var message = "${login}" + ":" + messageField.value;
             var message = messageField.value;
             ws.send(message);
             messageField.value = '';
@@ -53,9 +52,6 @@
 <div id="body">
     <div id="menu">
         <p class="welcome">
-            <!--
-            Welcome, <input id="username" value="anonymous"/>
-            -->
             Welcome, ${login}
         </p>
 
@@ -66,7 +62,7 @@
         <textarea id="messages" rows="20" cols="50" readonly="readonly"></textarea>
     </div>
 
-    <form name="message" action="" onsubmit="sendMessage();return false;">
+    <form accept-charset="utf-8" name="message" action="" onsubmit="sendMessage();return false;">
         <input name="usermsg" type="text" id="message" size="40"/>
         <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
     </form>

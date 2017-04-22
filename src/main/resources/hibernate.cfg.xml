@@ -11,6 +11,9 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
         <property name="show_sql">true</property>
         <property name="connection.pool_size">1</property>
+        <property name="hibernate.connection.CharSet">utf8</property>
+        <property name="hibernate.connection.characterEncoding">utf8</property>
+        <property name="hibernate.connection.useUnicode">true</property>
 
         <mapping class="accounts.UserProfile"></mapping>
         <mapping class="chat.Message"></mapping>

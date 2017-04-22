@@ -31,6 +31,7 @@ public class ChatWebSocket {
         userProfile.online = true;
         chatService.add(this);
         this.session = session;
+        chatService.loadGettedMessages(userProfile);
 
         Iterator<Message> iterator = userProfile.gettedMessages.iterator();
 

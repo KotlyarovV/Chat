@@ -37,11 +37,12 @@ public class ChatService {
             }
             if (i == webSockets.size() && send == false) {
                 accountService.addMessage(message);
-                System.out.println ("writed");
             }
         }
 
     }
+
+    public void loadGettedMessages (UserProfile userProfile) {accountService.loadGettedMessages(userProfile);}
 
     public void deleteMessage (Message message) {
         accountService.deleteMessage(message);

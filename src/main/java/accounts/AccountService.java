@@ -67,15 +67,27 @@ public class AccountService {
     }
 
     public void addMessage (Message message) {
+
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.saveOrUpdate(message);
         session.getTransaction().commit();
         session.close();
-        getUserById(message.fromId).getSendedMessages().add(message);
-        if (message.toId != null &&  message.toId != 0)
-            getUserById(message.toId).getGettedMessagesMessages().add(message);
+        //getUserById(message.fromId).getSendedMessages().add(message);
+        //if (message.toId != null &&  message.toId != 0)
+          //  getUserById(message.toId).getGettedMessagesMessages().add(message);
     }
+
+
+    public void loadGettedMessages (UserProfile user) {
+        try {
+            Session session = sessionFactory.openSession();
+            List<Message> messages = (List<Message>)session.createQuery("from chat.Message m where m.toId=" + user.id).list();
+            user.gettedMessages.addAll(messages);
+            session.close();
+        } finally {}
+    }
+
 
     public void deleteMessage (Message message) {
         Session session = sessionFactory.openSession();
