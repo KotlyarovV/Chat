@@ -27,11 +27,11 @@ public class UserProfile {
         return gettedMessages;
     }
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="from_id")
     public List<Message> sendedMessages;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="to_id")
     public List<Message> gettedMessages;
 

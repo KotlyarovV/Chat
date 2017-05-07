@@ -19,12 +19,14 @@ public class Main {
 
         AccountService accountService = new AccountService();
 
-        AllRequestsServlet allRequestsServlet = new AllRequestsServlet();
+        AllRequestsServlet allRequestsServlet = new AllRequestsServlet(accountService);
+        AllUsersServlet allUsersServlet = new AllUsersServlet(accountService);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), "/signup");
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), "/signin");
         context.addServlet(new ServletHolder(new chat.ChatServlet(accountService)), "/chat");
+        context.addServlet(new ServletHolder(allUsersServlet), "/people");
         context.addServlet(new ServletHolder(new FileServlet()), "/file");
         context.addServlet(new ServletHolder(allRequestsServlet), "/*");
 

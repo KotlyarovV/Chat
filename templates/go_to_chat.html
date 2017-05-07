@@ -3,8 +3,31 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<style>
+   body {
+    background: url(cats.jpg) no-repeat center center fixed; /* Добавляем фон */
+    -moz-background-size: cover; 
+    -webkit-background-size: cover;  
+    -o-background-size: cover; 
+    background-size: cover;
+    }
+   div {
+     position: fixed; 
+     border: 2px solid #000; 
+     border-radius: 30px; 
+    background: rgba(255,165,0, 0.5);
+    -moz-background-size: cover; 
+    -webkit-background-size: cover;  
+    -o-background-size: cover; 
+    background-size: cover;
+    font-size:18px;
+    font-weight:900;
+    padding: 15px;
+   }
+  </style>
 
+<body>
+<div>
 <script type="text/javascript">
     function getCookie(name) {
         var value = "; " + document.cookie;
@@ -19,5 +42,6 @@
 </script>
 
 <button onclick="window.location.href='/chat'">Go to chat</button>
+</div>
 </body>
 </html>

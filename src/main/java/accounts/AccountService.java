@@ -4,20 +4,24 @@ import chat.Message;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.servlet.http.Cookie;
 import java.util.*;
 import java.util.logging.Logger;
 
 public class AccountService {
 
     private final Map<String, UserProfile> loginToProfile;
+
+    public Map<String, UserProfile> getLoginToProfile() {
+        return loginToProfile;
+    }
+
     private final Map<Integer, UserProfile> idToProfile;
-    private final Set<String> hashes;
     public SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public AccountService() {
         loginToProfile = new HashMap<>();
         idToProfile = new HashMap<>();
-        hashes = new HashSet<>();
         loadUsers();
     }
 
@@ -48,6 +52,24 @@ public class AccountService {
             return userProfile.getPassword().equals(password);
     }
 
+
+    public boolean checkingUser (Cookie[] cookies, StringBuilder stringBuilder) {
+        String login = "";
+        String password = "";
+
+        if (cookies == null) return false;
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("login")) {
+                login = cookie.getValue();
+                stringBuilder.append(login);
+            }
+            if (cookie.getName().equals("password")) password = cookie.getValue();
+        }
+
+        return  this.checkingUser(login, password);
+    }
+
     public UserProfile getUser (String login) {
         return loginToProfile.get(login);
     }
@@ -73,16 +95,14 @@ public class AccountService {
         session.saveOrUpdate(message);
         session.getTransaction().commit();
         session.close();
-        //getUserById(message.fromId).getSendedMessages().add(message);
-        //if (message.toId != null &&  message.toId != 0)
-          //  getUserById(message.toId).getGettedMessagesMessages().add(message);
     }
 
 
     public void loadGettedMessages (UserProfile user) {
         try {
             Session session = sessionFactory.openSession();
-            List<Message> messages = (List<Message>)session.createQuery("from chat.Message m where m.toId=" + user.id).list();
+            List<Message> messages = (List<Message>)session
+                    .createQuery("from chat.Message m where m.toId=" + user.id).list();
             user.gettedMessages.addAll(messages);
             session.close();
         } finally {}
@@ -93,6 +113,22 @@ public class AccountService {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         session.delete(message);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void deleteUser (UserProfile user) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        for (Message message : user.gettedMessages) {
+            session.delete(message);
+        }
+        for (Message message : user.sendedMessages) {
+            session.delete(message);
+        }
+        loginToProfile.remove(user.getLogin());
+        idToProfile.remove(user.id);
+        session.delete(user);
         session.getTransaction().commit();
         session.close();
     }

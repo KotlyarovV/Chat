@@ -10,6 +10,7 @@ import accounts.AccountService;
 import accounts.UserProfile;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+import servlets.FileSender;
 import templater.PageGenerator;
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -32,17 +33,15 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-        Cookie[] ck=request.getCookies();
+        System.out.println(request.getRequestURI());
 
-        String login = "";
-        String password = "";
-
-        for (Cookie cookie : ck) {
-            if (cookie.getName().equals("login")) login = cookie.getValue();
-            if (cookie.getName().equals("password")) password = cookie.getValue();
+        if (!request.getRequestURI().equals("/chat")) {
+            FileSender.sendFile(request, resp, request.getPathInfo());
+            return;
         }
 
-        boolean checking = accountService.checkingUser(login, password);
+        StringBuilder login = new StringBuilder();
+        boolean checking = accountService.checkingUser(request.getCookies(), login);
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -50,7 +49,7 @@ public class ChatServlet extends WebSocketServlet {
         if (checking) {
 
             Map<String, Object> pageVariables = new HashMap<String, Object>();
-            pageVariables.put("login", login);
+            pageVariables.put("login", login.toString());
             resp.getWriter().println(PageGenerator.instance().getPage("index.html", pageVariables));
         }
         else resp.getWriter().println("You are not registered!!!");
@@ -58,6 +57,8 @@ public class ChatServlet extends WebSocketServlet {
 
     @Override
     public void configure(WebSocketServletFactory factory) {
+
+
         factory.getPolicy().setIdleTimeout(LOGOUT_TIME);
         factory.setCreator((request, response) ->
         {

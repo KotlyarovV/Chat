@@ -27,9 +27,11 @@ public class ChatService {
 
                 if ((chatWebSocket.link == null && user.link == null && chatWebSocket.toUserProfile == null) ||
                         (user.link != null && user.link.equals(chatWebSocket.link)) ||
-                        (chatWebSocket.toUserProfile.getLogin().equals(user.userProfile.getLogin()))) {
+                        (chatWebSocket.toUserProfile.getLogin().equals(user.userProfile.getLogin())) ||
+                        (chatWebSocket.userProfile.getLogin().equals(user.userProfile.getLogin()) )) {
                     user.sendString(message.from.login + " : " + message.value);
-                    send = true;
+                    if (!(chatWebSocket.userProfile.getLogin().equals(user.userProfile.getLogin()) ))
+                        send = true;
                 }
 
             } catch (Exception e) {

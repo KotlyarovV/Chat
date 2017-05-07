@@ -1,7 +1,30 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>Chat</title>
+    <title>vkote</title>
+<style>
+   body {
+    background: url(cats.jpg) no-repeat center center fixed; /* Добавляем фон */
+    -moz-background-size: cover; 
+    -webkit-background-size: cover;  
+    -o-background-size: cover; 
+    background-size: cover;
+    }
+   .block1 {
+     width: 460px; 
+     border: 2px solid #000; 
+     border-radius: 30px; 
+    background: rgba(255,165,0, 0.5);
+    -moz-background-size: cover; 
+    -webkit-background-size: cover;  
+    -o-background-size: cover; 
+    background-size: cover;
+    font-size:18px;
+    font-weight:900; 
+    padding: 15px;
+   }
+  </style>
+
     <script type="text/javascript">
 
         function getParameterByName(name) {
@@ -19,11 +42,11 @@
         var ws;
         function init() {
             if (getParameterByName("link") != null || getParameterByName("link") == "") {
-                ws = new WebSocket("ws://localhost:8080/chat?link="+ getParameterByName("link"));
+                ws = new WebSocket("ws://95.82.220.91:8080/chat?link="+ getParameterByName("link"));
             } else if (getParameterByName("name") != null || getParameterByName("name") == "") {
-                ws = new WebSocket("ws://localhost:8080/chat?name="+ getParameterByName("name"));
+                ws = new WebSocket("ws://95.82.220.91:8080/chat?name="+ getParameterByName("name"));
             } else {
-                 ws = new WebSocket("ws://localhost:8080/chat");
+                 ws = new WebSocket("ws://95.82.220.91:8080/chat");
             }
             ws.onopen = function (event) {
             }
@@ -31,6 +54,7 @@
             ws.onmessage = function (event) {
                 var $textarea = document.getElementById("messages");
                 $textarea.value = $textarea.value + event.data + "\n";
+                $textarea.scrollTop = $textarea.scrollHeight;
             }
             ws.onclose = function (event) {
             }
@@ -49,6 +73,7 @@
     </script>
 </head>
 <body onload="init();">
+<div class="block1">
 <div id="body">
     <div id="menu">
         <p class="welcome">
@@ -63,12 +88,13 @@
     </div>
 
     <form accept-charset="utf-8" name="message" action="" onsubmit="sendMessage();return false;">
-        <input name="usermsg" type="text" id="message" size="40"/>
+        <input name="usermsg" type="text" id="message" size="40" autocomplete="off"/>
         <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
     </form>
 
 
     </form><button onclick="window.location.href='/'">To main page</button></form>
+</div>
 </div>
 </body>
 </html>
