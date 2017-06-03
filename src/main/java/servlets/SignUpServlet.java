@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class SignUpServlet extends HttpServlet {
 
@@ -34,17 +35,15 @@ public class SignUpServlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+        response.setContentType("text/html;charset=utf-8");
 
         if (accountService.checkRegistration(login)) {
-            response.setContentType("text/html;charset=utf-8");
-            response.getWriter().println("You have been already registered!");
+            response.getWriter().println("Вы уже зарегестрированны!");
             response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         accountService.addNewUser(new UserProfile(login,password));
-
-        response.setContentType("text/html;charset=utf-8");
         response.addCookie(new Cookie("login", login));
         response.addCookie(new Cookie("password", password));
 

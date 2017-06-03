@@ -37,11 +37,12 @@ public class SignInServlet extends HttpServlet {
         boolean checking = accountService.checkingUser(login, password);
 
         if (checking) {
-            response.addCookie(new Cookie("login", login));
-            response.addCookie(new Cookie("password", password));
+            Cookie l = new Cookie("login", login);
+            Cookie p = new Cookie("password", password);
+
+            response.addCookie(l);
+            response.addCookie(p);
         }
-
-
 
         response.setContentType("text/html;charset=utf-8");
         response.sendRedirect(url.getPath());

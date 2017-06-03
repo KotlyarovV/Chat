@@ -1,11 +1,11 @@
 package chat;
 
 import accounts.UserProfile;
-import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 /**
  * Created by vitaly on 04.04.17.
@@ -31,12 +31,12 @@ public class Message {
 
 
     @ManyToOne
-    @ForeignKey(name = "from_id")
+    @JoinColumn(foreignKey=@ForeignKey(name = "from_id"))
     public UserProfile from;
 
 
     @ManyToOne
-    @ForeignKey(name = "to_id")
+    @JoinColumn(foreignKey=@ForeignKey(name = "to_id"))
     public UserProfile to;
 
 

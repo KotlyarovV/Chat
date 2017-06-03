@@ -25,7 +25,7 @@ public class AllRequestsServlet extends HttpServlet {
 
     private String form = "<p>Sign in</p><form action=\"/signin\" method=\"POST\">\n" +
             "<p> Login: <input type=\"text\" name=\"login\"/> </p>\n" +
-            "<p>   Password: <input type=\"text\" name=\"password\"/>"+
+            "<p>   Password: <input type=\"password\" name=\"password\"/>"+
             " <input type=\"submit\" value=\"Ok\"> </p>\n" +
             "</form><br><form action=\"/signup\"><button type = \"submit\">" +
             " button for registration</button></form>\n";
@@ -38,6 +38,7 @@ public class AllRequestsServlet extends HttpServlet {
                 "<input type=\"submit\" value=\"Ok\"> </p> </form><br>" +
                 "<a href=\"people\" lang=\"ru\">Список пользователей</a><br><br>" +
                 "<a href=\"file\" lang=\"ru\">Скачать Мирохину песню</a><br><br><br>" +
+                "<a href=\"music\" lang=\"ru\">Музыка</a><br><br><br>" +
                 "<button onclick=\"anuuthorization()\">Exit</button>";
 
     }

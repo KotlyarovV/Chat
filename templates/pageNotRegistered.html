@@ -1,0 +1,75 @@
+<html xmlns:background-size="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>vkote</title>
+</head>
+<title>background-size</title>
+<style>
+   body {
+    top: 0;
+    bottom:0;
+    background: url(cats.jpg) no-repeat center center fixed; /* Добавляем фон */
+    overflow-y:scroll;
+    overflow-x:hidden;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+   div {
+     position: absolute;
+
+     border: 2px solid #000;
+     border-radius: 30px;
+    background: rgba(255,165,0, 0.5);
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-size:18px;
+    font-weight:900;
+    padding: 10px;
+   }
+   A {
+    text-decoration: none; /* Убирает подчеркивание для ссылок */
+   }
+   A:hover {
+    text-decoration: underline; /* Добавляем подчеркивание при наведении курсора на ссылку */
+    color: red; /* Ссылка красного цвета */
+   }
+  </style>
+
+<body>
+<div>
+
+    <script type="text/javascript">
+
+    function getCookie(name) {
+        var value = "; " + document.cookie;
+        var parts = value.split("; " + name + "=");
+        if (parts.length >= 2) return parts.pop().split(";").shift();
+    }
+
+    function delete_cookie ( cookie_name )
+    {
+        var cookie_date = new Date ( );  // Текущая дата и время
+        cookie_date.setTime ( cookie_date.getTime() - 1 );
+        document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
+    }
+
+    function anuuthorization ()
+    {
+        delete_cookie("login");
+        delete_cookie("password");
+        window.location.href='/'
+    }
+
+</script>
+    <p>Вы не зарегестрированны!</p>
+    <p><a href="/signup">Пройти регистрацию</a></p>
+</div>
+
+</body>
+
+</html>
+>

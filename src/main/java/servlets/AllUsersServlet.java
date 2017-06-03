@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,13 +23,14 @@ public class AllUsersServlet extends HttpServlet {
         this.accountService = accountService;
     }
 
-    private String unregistered = "<p>You are not registered!</p>";
-
     private String greeting (String login) {
         String page = "<h1>Hello, " + login + "!</h1>";
+        UserProfile user = accountService.getUser(login);
+        List<Integer> ids = accountService.idsWrittenUsers(user);
         for (String userProfile : accountService.getLoginToProfile().keySet()) {
             if (!userProfile.equals(login)) {
-                page = page + "<a href=\"chat?name=" + userProfile +"\">"+ userProfile +"</a><br>";
+                String message = (ids.contains(accountService.getUser(userProfile).id)) ? " + " : "";
+                page = page + "<a href=\"chat?name=" + userProfile +"\">"+ userProfile+ message +"</a><br>";
             }
         }
         return page;
@@ -42,19 +44,25 @@ public class AllUsersServlet extends HttpServlet {
             return;
         }
 
+        Map<String, Object> pageVariables = new HashMap<String, Object>();
+
         StringBuilder login = new StringBuilder();
         boolean checking = accountService.checkingUser(request.getCookies(), login);
 
-        response.setContentType("text/html;charset=utf-8");
-        Map<String, Object> pageVariables = new HashMap<String, Object>();
-        pageVariables.put("page", checking ? greeting(login.toString()) : unregistered);
+        if (checking) pageVariables.put("page",  greeting(login.toString()));
 
-        response.getWriter().println(PageGenerator.instance().getPage("page.html", pageVariables));
+
+        String page = checking ?
+                PageGenerator.instance().getPage("page.html", pageVariables) :
+                PageGenerator.instance().getPage("pageNotRegistered.html", null);
+
+        response.setContentType("text/html;charset=utf-8");
+
+        response.getWriter().println(page);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
     public void doPost (HttpServletRequest request,
                         HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

@@ -1,8 +1,11 @@
 package accounts;
 
 import chat.Message;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import javax.servlet.http.Cookie;
 import java.util.*;
@@ -11,13 +14,12 @@ import java.util.logging.Logger;
 public class AccountService {
 
     private final Map<String, UserProfile> loginToProfile;
-
     public Map<String, UserProfile> getLoginToProfile() {
         return loginToProfile;
     }
 
     private final Map<Integer, UserProfile> idToProfile;
-    public SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     public AccountService() {
         loginToProfile = new HashMap<>();
@@ -30,16 +32,10 @@ public class AccountService {
             Session session = sessionFactory.openSession();
             List<UserProfile> users = (List<UserProfile>)session.createQuery("from accounts.UserProfile").list();
 
-            for (UserProfile userProfile : users) {
+            users.forEach((userProfile) -> {
                 loginToProfile.put(userProfile.getLogin(), userProfile);
                 idToProfile.put(userProfile.id, userProfile);
-                System.out.println(userProfile.getLogin()+" " +userProfile.getPassword());
-                for (Message message : userProfile.getGettedMessagesMessages())
-                    System.out.println(message.value + " getted");
-
-                for (Message message : userProfile.getSendedMessages())
-                    System.out.println(message.value);
-            }
+            });
 
             session.close();
         } finally {}
@@ -47,9 +43,9 @@ public class AccountService {
 
     public boolean checkingUser (String login, String password) {
 
-            if (!loginToProfile.containsKey(login)) return false;
-                UserProfile userProfile = loginToProfile.get(login);
-            return userProfile.getPassword().equals(password);
+        if (!loginToProfile.containsKey(login)) return false;
+        UserProfile userProfile = loginToProfile.get(login);
+        return userProfile.getPassword().equals(password);
     }
 
 
@@ -78,43 +74,60 @@ public class AccountService {
         return loginToProfile.containsKey(login);
     }
 
-    public void addNewUser(UserProfile userProfile)
-    {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.saveOrUpdate(userProfile);
-        session.getTransaction().commit();
-        session.close();
+    public void addNewUser(UserProfile userProfile) {
+        saveInBase(userProfile);
         loginToProfile.put(userProfile.getLogin(), userProfile);
     }
 
     public void addMessage (Message message) {
+        saveInBase(message);
+    }
 
+    public <T> void saveInBase (T value) {
         Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.saveOrUpdate(message);
-        session.getTransaction().commit();
+        try {
+            session.beginTransaction();
+            session.saveOrUpdate(value);
+            session.flush();
+            session.clear();
+            session.getTransaction().commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<Integer> idsWrittenUsers (UserProfile userProfile) {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Message.class)
+                .setProjection(Projections.distinct(Projections.property("fromId")))
+                .add(Restrictions.eq("toId", userProfile.id));
+        List<Integer> idsFrom = (List<Integer>) criteria.list();
         session.close();
+        return idsFrom;
     }
 
 
-    public void loadGettedMessages (UserProfile user) {
+    public void loadGettedMessages (UserProfile userTo, UserProfile userFrom) {
         try {
             Session session = sessionFactory.openSession();
             List<Message> messages = (List<Message>)session
-                    .createQuery("from chat.Message m where m.toId=" + user.id).list();
-            user.gettedMessages.addAll(messages);
+                    .createQuery(
+                            "from chat.Message m where m.toId=" + userTo.id
+                        + " and m.fromId=" + userFrom.id).list();
+            userTo.gettedMessages.addAll(messages);
             session.close();
         } finally {}
     }
 
 
     public void deleteMessage (Message message) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.delete(message);
-        session.getTransaction().commit();
-        session.close();
+        try {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.delete(message);
+            session.getTransaction().commit();
+            session.close();
+        } finally {}
     }
 
     public void deleteUser (UserProfile user) {

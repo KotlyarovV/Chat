@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<style>
+   body {
+    background: url(cats.jpg) no-repeat center center fixed; /* Добавляем фон */
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+   .block1 {
+     width: 460px;
+     border: 2px solid #000;
+     border-radius: 30px;
+    background: rgba(255,165,0, 0.5);
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-size:18px;
+    font-weight:900;
+    padding: 15px;
+   }
+</style>
+
+<script type="text/javascript">
+    function changeText(id) {
+        id.innerHTML = "Ooops!";
+    }
+
+    function displayDate() {
+      document.getElementById("demo").innerHTML = Date();
+    }
+
+    function addField() {
+      document.getElementById("demo").innerHTML = Date();
+    }
+
+    function addInput(divName) {
+      var newdiv = document.createElement('div');
+      newdiv.innerHTML = '<br>Select File to Upload:<br><input type="file" onchange="addInput(\'dynamicInput\');"  name="fileName">';
+      document.getElementById(divName).appendChild(newdiv);
+    }
+</script>
+</head>
+<body>
+<div class="block1">
+<form action="/getimage" method="post" enctype="multipart/form-data">
+    <div id="dynamicInput">
+        <br>Загрузите фото<br><input type="file" onchange="addInput('dynamicInput');" name="fileName">
+    </div>
+    <br>
+    <input type="submit" value="Отправить">
+</form>
+</div>
+</body>
+</html>

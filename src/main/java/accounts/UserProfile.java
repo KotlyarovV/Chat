@@ -2,8 +2,9 @@ package accounts;
 import chat.Message;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table (name = "users")
@@ -23,24 +24,24 @@ public class UserProfile {
         return sendedMessages;
     }
 
-    public List<Message> getGettedMessagesMessages () {
+    public List<Message> getGettedMessages () {
         return gettedMessages;
     }
 
-    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="from_id")
+    @Transient
     public List<Message> sendedMessages;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="to_id")
+    @Transient
     public List<Message> gettedMessages;
 
     public UserProfile(String login, String pass) {
+        this();
         this.login = login;
         this.password = pass;
     }
 
     public UserProfile(String login) {
+        this();
         this.login = login;
         this.password = login;
     }
@@ -48,7 +49,10 @@ public class UserProfile {
     @Transient
     public boolean online = false;
 
-    public UserProfile() {};
+    public UserProfile() {
+        sendedMessages = new ArrayList<>();
+        gettedMessages = new ArrayList<>();
+    }
 
     public String getLogin() {
         return login;
@@ -56,5 +60,17 @@ public class UserProfile {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public int hashCode() {
+        return login.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == null || !(o instanceof UserProfile)) return false;
+        UserProfile userProfile = (UserProfile) o;
+        return this.login.equals(userProfile.login);
     }
 }

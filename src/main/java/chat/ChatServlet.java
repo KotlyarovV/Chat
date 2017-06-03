@@ -2,8 +2,6 @@ package chat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import accounts.AccountService;
@@ -33,12 +31,10 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
 
-        System.out.println(request.getRequestURI());
-
         if (!request.getRequestURI().equals("/chat")) {
             FileSender.sendFile(request, resp, request.getPathInfo());
             return;
-        }
+       }
 
         StringBuilder login = new StringBuilder();
         boolean checking = accountService.checkingUser(request.getCookies(), login);
@@ -58,16 +54,15 @@ public class ChatServlet extends WebSocketServlet {
     @Override
     public void configure(WebSocketServletFactory factory) {
 
-
         factory.getPolicy().setIdleTimeout(LOGOUT_TIME);
         factory.setCreator((request, response) ->
         {
             List<HttpCookie> ck = request.getCookies();
-            String login = "";
-
-            for (HttpCookie cookie : ck)
-                if (cookie.getName().equals("login")) login = cookie.getValue();
-
+            String login = ck.stream()
+                            .filter(cookie -> cookie.getName().equals("login"))
+                            .findFirst()
+                            .orElse(new HttpCookie("log",""))
+                            .getValue();
 
             UserProfile userProfile = accountService.getUser(login);
             Map <String, List<String>> parameterMap = request.getParameterMap();
